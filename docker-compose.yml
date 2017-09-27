@@ -1,0 +1,26 @@
+version: '2'
+services:
+    httpd:
+        container_name: webenv_httpd
+        network_mode: bridge
+        build:
+            context: build/httpd
+        environment:
+            DOMAIN: example.tld
+        links:
+            - php
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./mnt/httpd/config:/config
+            - ./mnt/httpd/www:/www
+    php:
+        container_name: webenv_php
+        network_mode: bridge
+        build:
+            context: build/php
+        ports:
+            - "9000:9000"
+        volumes:
+            - ./mnt/httpd/www:/www
