@@ -30,9 +30,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	php-xdebug \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY overrides.conf /etc/php/7.0/fpm/pool.d/z-overrides.conf
+COPY root /
 
-CMD ["/usr/sbin/php-fpm7.0", "--nodaemonize"]
+CMD ["/init.sh"]
 
 VOLUME ["/www"]
 

@@ -34,5 +34,10 @@ if [ ! -f "/config/ssl/$DOMAIN.crt" ]; then
 	rm -- $conf
 fi
 
+# Remove old pid file
+if [ -f /var/run/apache2/apache2.pid ]; then
+	rm /var/run/apache2/apache2.pid
+fi
+
 # Start apache
 apachectl -f /config/httpd.conf -DFOREGROUND
