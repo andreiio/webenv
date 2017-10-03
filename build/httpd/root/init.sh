@@ -3,10 +3,10 @@
 # Populate the /config dir if it's empty
 if [ -d /config -a -z "$(ls -A /config)" ]; then
 
-	mkdir -p /config/ssl
+	mkdir -p /config/{ssl,sites}
 
 	cp /httpd.conf /config/httpd.conf
-	cp /sites /config
+	cp /sites/*.conf /config/sites
 
 	sed -i "s/DOMAIN/$DOMAIN/g" /config/sites/default.conf
 fi
@@ -25,10 +25,10 @@ if [ ! -f "/config/ssl/$DOMAIN.crt" ]; then
 	sed -i "s/DOMAIN/$DOMAIN/g" $conf
 
 	openssl req -verbose -new -newkey rsa:2048 -days 3650 -nodes -x509 \
-	    -config $conf \
-	    -extensions v3_req \
-	    -keyout $path.key \
-	    -out $path.crt
+		-config $conf \
+		-extensions v3_req \
+		-keyout $path.key \
+		-out $path.crt
 
 	# Cleanup
 	rm -- $conf
