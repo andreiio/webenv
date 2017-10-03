@@ -5,8 +5,8 @@ if [ -d /config -a -z "$(ls -A /config)" ]; then
 
 	mkdir -p /config/ssl
 
-	mv /httpd.conf /config/httpd.conf
-	mv /sites /config
+	cp /httpd.conf /config/httpd.conf
+	cp /sites /config
 
 	sed -i "s/DOMAIN/$DOMAIN/g" /config/sites/default.conf
 fi
@@ -21,7 +21,7 @@ if [ ! -f "/config/ssl/$DOMAIN.crt" ]; then
 	conf="/config/ssl/$DOMAIN-openssl.conf"
 	path="/config/ssl/$DOMAIN"
 
-	mv /openssl.conf $conf
+	cp /openssl.conf $conf
 	sed -i "s/DOMAIN/$DOMAIN/g" $conf
 
 	openssl req -verbose -new -newkey rsa:2048 -days 3650 -nodes -x509 \
