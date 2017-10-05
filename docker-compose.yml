@@ -1,26 +1,50 @@
-version: '2'
+version: '3'
 services:
     httpd:
+        image: andreiio/webenv-httpd
         container_name: webenv_httpd
-        network_mode: bridge
-        build:
-            context: build/httpd
+        restart: unless-stopped
         environment:
-            DOMAIN: example.tld
+            DOMAIN: $DOMAIN
         links:
             - php
         ports:
-            - "80:80"
-            - "443:443"
+            - 80:80/tcp
+            - 443:443/tcp
         volumes:
-            - ./mnt/httpd/config:/config
-            - ./mnt/httpd/www:/www
+            - $PWD/mnt/httpd/config:/config
+            - $PWD/mnt/httpd/www:/www
     php:
+        image: andreiio/webenv-php
         container_name: webenv_php
-        network_mode: bridge
-        build:
-            context: build/php
+        restart: unless-stopped
+        links:
+            - db
         ports:
-            - "9000:9000"
+            - 9000:9000/tcp
         volumes:
-            - ./mnt/httpd/www:/www
+            - $PWD/mnt/httpd/www:/www
+    db:
+        image: mariadb
+        container_name: webenv_db
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+        ports:
+            - 3306:3306/tcp
+        volumes:
+            - $PWD/mnt/mariadb:/var/lib/mysql
+    dns:
+        image: andyshinn/dnsmasq
+        container_name: webenv_dns
+        restart: unless-stopped
+        command: --address=/${DOMAIN}/127.0.0.1
+        ports:
+            - 53535:53/tcp
+            - 53535:53/udp
+        cap_add:
+            - NET_ADMIN
+
+networks:
+    default:
+        driver: bridge
