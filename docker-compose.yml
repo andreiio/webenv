@@ -6,6 +6,7 @@ services:
         restart: unless-stopped
         environment:
             DOMAIN: $DOMAIN
+            FCGI_URL: $FCGI_URL
         links:
             - php
         ports:
