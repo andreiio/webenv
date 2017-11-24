@@ -7,6 +7,8 @@ services:
         environment:
             DOMAIN: $DOMAIN
             FCGI_URL: $FCGI_URL
+            PUID: $PUID
+            PGID: $PGID
         links:
             - php
         ports:
@@ -19,6 +21,9 @@ services:
         image: andreiio/webenv-php
         container_name: webenv_php
         restart: unless-stopped
+        environment:
+            PUID: $PUID
+            PGID: $PGID
         links:
             - db
         ports:
@@ -31,6 +36,8 @@ services:
         restart: unless-stopped
         environment:
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+            PUID: $PUID
+            PGID: $PGID
         ports:
             - 3306:3306/tcp
         volumes:
